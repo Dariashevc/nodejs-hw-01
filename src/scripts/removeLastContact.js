@@ -1,3 +1,8 @@
-export const removeLastContact = async () => {};
+import UpdateContacts from './UpdateContacts.js';
+import { getAllContacts } from './getAllContacts.js';
 
-removeLastContact();
+export const removeLastContact = async () => {
+  const contactRemove = await getAllContacts();
+  contactRemove.pop();
+  await UpdateContacts(contactRemove);
+};
