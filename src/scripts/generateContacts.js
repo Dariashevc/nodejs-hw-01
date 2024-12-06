@@ -1,11 +1,19 @@
 import { PATH_DB } from '../constants/contacts.js';
-import * as fs from 'node:fs/promises';
-import UpdateContacts from './UpdateContacts.js';
-
+import fs from 'fs/promises';
 import { createFakeContact } from '../utils/createFakeContact.js';
-export const generateContacts = async (number) => {
-  const data = JSON.parse(await fs.readFile(PATH_DB, 'utf-8'));
-  const array = Array(number).fill(0).map(createFakeContact);
-  const updateFile = [...data, ...array];
-  await UpdateContacts(updateFile);
+
+const generateContacts = async (number) => {
+  try {
+    const data = await fs.readFile(PATH_DB, 'utf-8');
+    const parsedData = JSON.parse(data);
+    for (let i = 1; i <= number; i++) {
+      const contacts = createFakeContact();
+      parsedData.push(contacts);
+    }
+    await fs.writeFile(PATH_DB, JSON.stringify(parsedData, null, 2));
+  } catch (error) {
+    console.log(error);
+  }
 };
+
+generateContacts(5);
